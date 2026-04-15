@@ -705,7 +705,7 @@
 
     <script>
     // DIQQAT: API MANZILINGIZNI KIRITING
-    const API_URL = "https://conversations-dont-fridge-demographic.trycloudflare.com";
+    const API_URL = "https://bright-savannah-reynolds-biological.trycloudflare.com";
 
     let tg = window.Telegram.WebApp;
     tg.expand();
@@ -744,7 +744,15 @@
     }
 
     function closePopup() { document.getElementById('alert-modal').style.display = 'none'; if(popupCallback) popupCallback(); }
-    function showConfirm(text, callback) { document.getElementById('confirm-text').innerText = text; document.getElementById('confirm-modal').style.display = 'flex'; tg.HapticFeedback.impactOccurred('medium'); confirmCb = callback; }
+   function showConfirm(text, okText, okColor, callback) { 
+        document.getElementById('confirm-text').innerText = text; 
+        let btnYes = document.getElementById('confirm-btn-yes');
+        btnYes.innerText = okText || "Ha";
+        btnYes.style.background = okColor || "var(--tg-btn)";
+        document.getElementById('confirm-modal').style.display = 'flex'; 
+        tg.HapticFeedback.impactOccurred('medium'); 
+        confirmCb = callback; 
+    }
     function closeConfirm(res) { document.getElementById('confirm-modal').style.display = 'none'; if(confirmCb) confirmCb(res); }
     function showToast(msg) { let t = document.createElement('div'); t.className = 'toast-msg'; t.innerText = msg; document.body.appendChild(t); tg.HapticFeedback.impactOccurred('light'); setTimeout(() => { t.style.animation = "fadeOutUp 0.3s forwards"; setTimeout(() => t.remove(), 300); }, 2000); }
     // -------------------------
@@ -929,7 +937,7 @@
             return;
         }
 
-        showConfirm(`Xaridni tasdiqlaysizmi?\n\nMahsulot: ${finalName}\nQabul qiluvchi: ${tgTargetUsername}\nNarxi: ${finalPrice.toLocaleString()} UZS`, function(ok) {
+        showConfirm(`Xaridni tasdiqlaysizmi?\n\nMahsulot: ${finalName}\nQabul qiluvchi: ${tgTargetUsername}\nNarxi: ${finalPrice.toLocaleString()} UZS`, "Tasdiqlash", "var(--success)", function(ok) {
             if (ok) {
                 showPopup('loading', 'Kuting...', 'So\'rov qayta ishlanmoqda...');
                 let directItem = JSON.stringify([{ name: finalName, price: finalPrice, qty: 1 }]);
@@ -1006,7 +1014,7 @@
             closeModal('cart-modal');
             showPopup('error', "Mablag' yetarli emas", `Xarid uchun ${(totalPrice - balance).toLocaleString()} UZS yetishmayapti.`);
         } else {
-            showConfirm(`Xaridni tasdiqlaysizmi?\nBalansingizdan ${totalPrice.toLocaleString()} UZS yechiladi.`, function(ok) {
+            showConfirm(`Xaridni tasdiqlaysizmi?\nBalansingizdan ${totalPrice.toLocaleString()} UZS yechiladi.`, "Tasdiqlash", "var(--success)", function(ok) {
                 if (ok) {
                     showPopup('loading', 'Kuting...', 'So\'rov qayta ishlanmoqda...');
                     fetch(`${API_URL}/api/buy`, {
@@ -1095,7 +1103,7 @@
 
     function cancelTopup() {
         let btnYes = document.getElementById('confirm-btn-yes'); btnYes.innerText = "Ha"; btnYes.style.background = "var(--danger)";
-        showConfirm("Ushbu to'lov so'rovini bekor qilasizmi?", function(ok) {
+        showConfirm("Ushbu to'lov so'rovini bekor qilasizmi?", "Bekor qilish", "var(--danger)", function(ok) {
             if(ok) {
                 showPopup('loading', 'Kuting...', 'Bekor qilinmoqda...');
                 fetch(`${API_URL}/api/cancel_topup`, {
